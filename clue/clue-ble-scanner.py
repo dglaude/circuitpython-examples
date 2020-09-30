@@ -35,6 +35,7 @@
 ### TODO - keep an eye on memory - avoid the cp and clue objects - perhaps only store what is needed from Advertisement
 
 ### Tested: Adafruit CircuitPython 5.3.1 on 2020-07-13; Adafruit CLUE nRF52840 Express with nRF52840
+### Tested: Adafruit CircuitPython 6.0.0-beta.0 on 2020-09-21; Adafruit CLUE nRF52840 Express with nRF52840
 ### Modification:
 ###  * Filtering to show only Exposure Notification
 ### Copyright (c) 2020 David Glaude
