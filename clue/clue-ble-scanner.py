@@ -34,6 +34,12 @@
 
 ### TODO - keep an eye on memory - avoid the cp and clue objects - perhaps only store what is needed from Advertisement
 
+### Tested: Adafruit CircuitPython 5.3.1 on 2020-07-13; Adafruit CLUE nRF52840 Express with nRF52840
+### Modification:
+###  * Filtering to show only Exposure Notification
+### Copyright (c) 2020 David Glaude
+
+
 import time
 import gc
 import os
@@ -240,29 +246,34 @@ while True:
     d_print(2, "Loop", count)
     for ad in ble.start_scan(minimum_rssi=-127, timeout=scan_time_s):
         now_ns = time.monotonic_ns()
-        ##addr_b = ad.address.address_bytes
-        c_name = ad.complete_name
-        addr_text = "".join(["{:02x}".format(b) for b in reversed(ad.address.address_bytes)])
-        
-        last_ad_by_key[addr_text] = (ad, now_ns, ad.rssi)
 
-        try:
-            addresses_count[addr_text] += 1
-        except KeyError:
-            addresses_count[addr_text] = 1
+### This filter out all the BLE advertisement that are not 
+        if 3 in ad.data_dict:
+            if ad.data_dict[3] == b'o\xfd':
 
-        oui = addr_text[:6]
-        try:
-            oui_count[oui] += 1
-        except KeyError:
-            oui_count[oui] = 1
-        
-        if c_name is not None:
-            c_name_by_addr[addr_text] = c_name
-            try:
-                complete_names_count[c_name] += 1
-            except KeyError:
-                complete_names_count[c_name] = 1      
+                ##addr_b = ad.address.address_bytes
+                c_name = ad.complete_name
+                addr_text = "".join(["{:02x}".format(b) for b in reversed(ad.address.address_bytes)])
+
+                last_ad_by_key[addr_text] = (ad, now_ns, ad.rssi)
+
+                try:
+                    addresses_count[addr_text] += 1
+                except KeyError:
+                    addresses_count[addr_text] = 1
+
+                oui = addr_text[:6]
+                try:
+                    oui_count[oui] += 1
+                except KeyError:
+                    oui_count[oui] = 1
+    
+                if c_name is not None:
+                    c_name_by_addr[addr_text] = c_name
+                    try:
+                        complete_names_count[c_name] += 1
+                    except KeyError:
+                        complete_names_count[c_name] = 1      
 
         if button_right():
             data_mask = (data_mask + 1 ) % DATA_MASK_LEVELS
