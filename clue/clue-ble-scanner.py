@@ -36,6 +36,7 @@
 
 ### Tested: Adafruit CircuitPython 5.3.1 on 2020-07-13; Adafruit CLUE nRF52840 Express with nRF52840
 ### Tested: Adafruit CircuitPython 6.0.0-beta.0 on 2020-09-21; Adafruit CLUE nRF52840 Express with nRF52840
+### Tested: Adafruit CircuitPython 6.0.0-alpha.2 on 2020-07-23; Adafruit Circuit Playground Bluefruit with nRF52840 + TFT Gizmo
 ### Modification:
 ###  * Filtering to show only Exposure Notification
 ### Copyright (c) 2020 David Glaude
@@ -279,6 +280,12 @@ while True:
         if button_right():
             data_mask = (data_mask + 1 ) % DATA_MASK_LEVELS
             while button_right():
+                pass
+
+        if button_left():
+            debug_mem_free = gc.mem_free()
+            print("Memfree: ", debug_mem_free)
+            while button_left():
                 pass
 
         if now_ns - last_seen_update_ns > screen_update_ns:
